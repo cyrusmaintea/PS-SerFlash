@@ -1,0 +1,4 @@
+set PATH=C:\Psx\PSYQ\BIN
+
+PSXSERIAL.EXE .\bin\PSX.exe COM1
+
