@@ -8,20 +8,16 @@ char *buf[BUFFSIZE];
 char *dev;
 char *clear = 0x00;
 char eol = '\n';
-unsigned int start, count;
 long rc,n;
 int i,j,k;
 
-void initSerCore() {
-	dev = "tty";
-	printf("~ SerCore Initialized\n");
-}
+int initSerCore(char *device, int bits) {
+	dev = device;
+	AddSIO(bits);
+	clearBuffer();
 
-void clearBuffer() {
-	//clear the buffer :D
-	for (j = 0; j <= BUFFSIZE; j++) {
-		buf[j] = clear;
-	}
+	printf("~ SerCore Initialized\n");
+	return 1;
 }
 
 long cmdSIO(unsigned long cmd, unsigned long arg, unsigned long cbVar) {
@@ -33,9 +29,8 @@ long cmdCOM(unsigned long cmd, unsigned long arg, unsigned long func) {
 }
 
 unsigned long cbTransmit(unsigned int spec, unsigned int countBit) {
+	unsigned int count;
 	count = countBit;
-
-	OPENP();
 
 	if (spec) {
 		//read
@@ -58,30 +53,27 @@ unsigned long cbTransmit(unsigned int spec, unsigned int countBit) {
 		}
 		printf("~ Write Complete\n");
 	}
-	CLOSEP();
 }
 
-void resetRC() {
-	ResetRCnt(rc);
-}
-
-void syncSC() {
-	resetRC();
-	clearBuffer();
+void clearBuffer() {
+	//clear the buffer :D
+	for (j = 0; j <= BUFFSIZE; j++) {
+		buf[j] = clear;
+	}
 }
 
 void syncPort() {
-	CLOSEP();
-	OPENP();
+	closePort();
+	openPort();
 }
 
-int OPENP() {
+int openPort() {
 	if(open(dev, O_RDWR) != -1)
 		return 0;
 	return 1;
 }
 
-int CLOSEP() {
+int closePort() {
 	if(close(*dev) != -1)
 		return 0;
 	return 1;
@@ -111,7 +103,7 @@ int fillBuffer(char str[], int startBit, int endBit) {
 	*buf[endBit] = stopBit;
 	return 1;
 }
-
+/*
 int sendPacketChar(char str[]) {
 	int strSize = sizeof(str);
 
@@ -120,3 +112,4 @@ int sendPacketChar(char str[]) {
 
 	return 1;
 }
+*/

@@ -2,8 +2,13 @@
 #define PSSFCORE_HEADER
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 #include <sys/file.h>
 #include <sys/types.h>
+#include <sys/ioctl.h>
+#include <setjmp.h>
 #include <kernel.h>
 #include <libgte.h>
 #include <libgpu.h>
@@ -17,10 +22,6 @@
 #include <libtap.h>
 #include <libgs.h>
 #include <libsn.h>
-#include <string.h>
-#include <strings.h>
-#include <setjmp.h>
-#include <stdlib.h>
-#include <sys/ioctl.h>
+
 
 #endif

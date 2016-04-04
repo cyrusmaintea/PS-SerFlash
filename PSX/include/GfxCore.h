@@ -3,8 +3,9 @@
 
 #include <PSSFCore.h>
 
-void clearScreen();
 void initGfx();
+void clearScreen();
+void clearColor(int r, int g, int b);
 void sync();
 void syncN(int n);
 

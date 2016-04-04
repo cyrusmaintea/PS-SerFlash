@@ -1,9 +1,6 @@
 #include <GfxCore.h>
 
 #define     MODE  			MODE_NTSC
-#define     RED             125
-#define     GREEN           125
-#define     BLUE            125
 #define     SCREEN_WIDTH    320
 #define     SCREEN_HEIGHT   240
 
@@ -13,7 +10,7 @@ void initGfx() {
 
 	ResetGraph(0);
 	SetDefDispEnv(&disp, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	disp.isinter = 0;
+	disp.isinter = 1;
 	disp.isrgb24 = 0;
 	SetDefDrawEnv(&draw, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -32,7 +29,13 @@ void initGfx() {
 void clearScreen() {
 	RECT	clearRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	sync();
-	ClearImage(&clearRect, RED, GREEN, BLUE);
+	ClearImage(&clearRect, 0, 0, 0);
+}
+
+void clearColor(int r, int g, int b) {
+	RECT	clearRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	sync();
+	ClearImage(&clearRect, r, g, b);
 }
 
 void sync() {
