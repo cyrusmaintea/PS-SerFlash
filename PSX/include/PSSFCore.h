@@ -1,5 +1,5 @@
-#ifndef SYSTEM_HEADER
-#define SYSTEM_HEADER
+#ifndef PSSFCORE_HEADER
+#define PSSFCORE_HEADER
 
 #include <stdio.h>
 #include <sys/file.h>

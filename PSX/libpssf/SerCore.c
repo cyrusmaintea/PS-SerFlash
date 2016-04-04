@@ -1,4 +1,4 @@
-#include "SerCore.h"
+#include <SerCore.h>
 
 #define     BUFFSIZE        256
 #define     BUFFCUT         BUFFSIZE-1
@@ -13,10 +13,8 @@ long rc,n;
 int i,j,k;
 
 void initSerCore() {
-
 	dev = "tty";
-
-	printf("SerCore Initialized\n");
+	printf("~ SerCore Initialized\n");
 }
 
 void clearBuffer() {
@@ -34,93 +32,76 @@ long cmdCOM(unsigned long cmd, unsigned long arg, unsigned long func) {
 	_comb_control(cmd, arg, func);
 }
 
-unsigned long cbTransmit(unsigned int spec, unsigned int startLoc, unsigned int countBit) {
-
-	StartRCnt(rc);
-
-	start = startLoc;
+unsigned long cbTransmit(unsigned int spec, unsigned int countBit) {
 	count = countBit;
 
 	OPENP();
 
 	if (spec) {
 		//read
-		for (i = start; i <= count; i++) {
+		for (i = 0; i <= count; i++) {
 			read(*dev, ser[i], 1);
-			//syncSC(0);
 			printf(" %hhX ", ser[i]);
 		}
-
 		if (i >= 1) {
 			i = 0;
 		}
-
-		printf("Read Complete\n");
+		printf("~ Read Complete\n");
 	} else if (spec == 2) {
 		//write
-		for (i = start; i <= count; i++) {
+		for (i = 0; i <= count; i++) {
 			write(*dev, buf[i], 1);
-			//syncSC(0);
 			printf(" %hhX ", buf[i]);
 		}
-
 		if (i >= 1) {
 			i = 0;
 		}
-
-		printf("Write Complete\n");
+		printf("~ Write Complete\n");
 	}
-
-	CLOSEP(1);
-	StopRCnt(rc);
-
+	CLOSEP();
 }
 
 void resetRC() {
 	ResetRCnt(rc);
 }
 
-int Write(int cbStart, int cbStop) {
-	if(cmdSIO(1, 4, cbTransmit(2, cbStart, cbStop))) {
-		printf("Wrote data - Complete\n");
-		printf("Root Counter Value: %l \n", rc);
-		return 1;
-	}
-	return 0;
+void syncSC() {
+	resetRC();
+	clearBuffer();
 }
 
-void OPENP() {
-	open(dev, O_RDWR);
+void syncPort() {
+	CLOSEP();
+	OPENP();
 }
 
-void CLOSEP(int e) {
-	if (e) {
-		close(1);
-	}
-	if (!e) {
-		close(0);
-	}
+int OPENP() {
+	if(open(dev, O_RDWR) != -1)
+		return 0;
+	return 1;
 }
 
-void syncSC(int e) {
-	//1
-	if (e) {
-		resetRC();
-		clearBuffer();
+int CLOSEP() {
+	if(close(*dev) != -1)
+		return 0;
+	return 1;
+}
+
+int Write(int cbCount) {
+	if(cmdSIO(1, 4, cbTransmit(2, cbCount))) {
+		printf("~ Wrote data - Complete\n");
+		printf("~ Root Counter Value: %l \n", rc);
+		return -1;
 	}
-	//0
-	if (!e) {
-		CLOSEP(e);
-		OPENP();
-	}
+	return 1;
 }
 
 // start & stop bit ranges = 1 - 255
 int fillBuffer(char str[], int startBit, int endBit) {
-	int strCnt = sizeof(str);
+	int strSize = sizeof(str);
 	char stopBit = 0xEF;
 
-	if (!(strCnt <= BUFFCUT))
+	if (!(strSize <= BUFFCUT))
 		return 0;
 
 	for (k = startBit; k <= endBit; k++) {
@@ -128,5 +109,14 @@ int fillBuffer(char str[], int startBit, int endBit) {
 	}
 
 	*buf[endBit] = stopBit;
+	return 1;
+}
+
+int sendPacketChar(char str[]) {
+	int strSize = sizeof(str);
+
+	if (!(strSize <= BUFFCUT))
+		return 0;
+
 	return 1;
 }
