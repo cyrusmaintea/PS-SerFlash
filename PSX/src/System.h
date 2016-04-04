@@ -23,6 +23,4 @@
 #include <stdlib.h>
 #include <sys/ioctl.h>
 
-#include "SerCore.h"
-
 #endif
