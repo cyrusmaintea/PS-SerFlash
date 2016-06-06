@@ -23,5 +23,11 @@
 #include <libgs.h>
 #include <libsn.h>
 
+/*
+
+transfer memcpy function from ser[] to buf[]
+use syncPort() after a memcpy function.
+
+*/
 
 #endif

@@ -1,40 +1,84 @@
 #include <Main.h>
 
-#define     VERS            "0.0.7"
+#define     VERS            "0.0.9"
+
 #define     BPS             115200
-#define     BUFFSIZE        256
+#define     BUFFSIZE        128
 #define     BUFFCUT         BUFFSIZE-1
 #define 	SIZE(x)			sizeof(x)
 
-extern char *ser[BUFFSIZE];
-extern char *buf[BUFFSIZE];
-extern char *clear;
-extern char *dev;
+#define		Flash128			0x00020000
+#define		Flash256			0x00040000
+#define		Flash512			0x00080000
+#define 	RAM2				0x00200000
+#define 	RAM4				0x00400000
+#define 	RAM8				0x00800000
+#define 	EXP					0x1F000000
+#define 	CLEAR				0x00
 
+#define		DBG					1
+
+
+char *dev = "tty:";
+char *clear = CLEAR;
+int done;
 u_long pad;
-int done = 0;
-char *dbgStr = "HELLO WORLD";
+char dbgStr[] = "HELLO WORLD";
+char *buf[BUFFSIZE];
 
 int main() {
 
-	initGfx();
+	done = 0;
 
-	dev = "tty";
-	initSerCore(*dev, BPS);
-	openPort();
+	if (!DBG)
+		open(dev, O_RDWR);
+
+	if (DBG) {
+		open(dev, O_RDWR);
+		AddSIO(BPS);
+	}
+
+	printf("~ Program Entry\n");
+
+	initGfx();
 
 	PadInit(0);
 
 	Menu();
 
-	while(!done) {
-		if(done) {
+	while (!done) {
+		if (done)
 			break;
-		}
-		continue;
 	}
 
+	printf("~ Program Exit\n");
+	termSig();
+
 	return 0;
+}
+
+void update() {
+
+	pad = PadRead(0);
+	VSync(0);
+
+	if (pad & PADselect)
+		done = 1;
+	if (pad & PADRdown) {
+		dbgMenu();
+	}
+
+}
+
+void termSig() {
+	close(*dev);
+	clearScreen();
+	PadStop();
+	StopCallback();
+	ResetGraph(0);
+	if (DBG)
+		DelSIO();
+	__asm__("J 0x801ECD94");
 }
 
 void Menu() {
@@ -48,83 +92,52 @@ void Menu() {
 	FntPrint("~~ Serial Port Based Flasher v%s  ~~\n", VERS);
 	FntPrint("~~               Menu                ~~\n");
 	FntPrint("~~                                   ~~\n");
-	FntPrint("~~ (X) Continue        (O) Shutdown  ~~\n");
+	FntPrint("~~ (X) Continue   (Select) Shutdown  ~~\n");
 	FntPrint("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	FntFlush(0);
-
-	while(1) {
+/*
+	while(!done) {
 		pad = PadRead(0);
-		sync();
+		VSync(0);
 
 		if (pad & PADRright) {
-			Exit();
-		}
-
-		if (pad & PADRdown) {
-			dbgMenu();
+			done = 1;
+		}else if (pad & PADRdown) {
+			sioTestMenu();
 		}
 	}
+*/
 }
 
 void dbgMenu() {
 
-	printf("~ Debug Menu Loaded\n");
+	printf("~ Debug Menu\n");
 
 	clearScreen();
 
-	FntPrint("Begin Serial Communication\n");
-	printf("~ Begin Serial Communication\n");
-	syncN(1);
-	FntPrint("Filling Buffer\n");
-	printf("~ Filling Buffer\n");
-	syncN(3);
+	FntPrint("~~ Debug Menu    |    Serial Comms  ~~\n");
+	printf("~ Debug Menu | Serial Comms\n");
+/*
+	FntPrint("Parsing Data\n");
+	printf("~ Parsing Data\n");
+	printf("DEBUG STRING: %s \n", buf);
 
-	if (!fillBuffer(clear, 0, BUFFSIZE)) {
-		printf("* Failed Filling Buffer!\n");
-	}
-	syncN(1);
-
-	FntPrint("Buffer Filled\n");
-	printf("~ Buffer Filled\n");
-	syncN(1);
-
-	/*
-	FntPrint("\t\tSending Buffer Data\n");
-	printf("~ Sending Buffer Data\n");
-	syncN(3);
-
-	if (!Write(SIZE(dbgStr))) {
-		printf("* Failed Writing Data!\n");
-	}
-	syncN(1);
-
-	printf("Wrote Buffer Data: %s \n", dbgStr);
-	FntPrint("Wrote Buffer Data: %s \n", dbgStr);
-	*/
-
-	FntPrint("\n\n(X) Continue\t\t(O) Shutdown\n");
+	clearBuffer(buf);
+	FntPrint("Buffer Cleared\n");
+	printf("~ Buffer Cleared\n");
+*/
+	FntPrint("~~ (X) Continue   (Select) Shutdown  ~~\n");
 	FntFlush(0);
-
-	while(1) {
+/*
+	while (!done) {
 		pad = PadRead(0);
-		sync();
-
-		if (pad & PADRdown) {
-			Menu();
-		}
+		VSync(0);
 
 		if (pad & PADRright) {
-			Exit();
+			done = 1;
+		} else if (pad & PADRdown) {
+			Menu();
 		}
 	}
-}
-
-void Exit() {
-
-	closePort();
-	PadStop();
-	printf("~ Program End\n");
-
-	done = 1;
-	__asm__("J 0x801ECD94");
+*/
 }

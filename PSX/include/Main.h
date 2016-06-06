@@ -5,8 +5,9 @@
 #include <PSSFCore.h>
 #include <GfxCore.h>
 
+void update();
+void termSig();
 void Menu();
 void dbgMenu();
-void Exit();
 
 #endif

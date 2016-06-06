@@ -17,3 +17,4 @@ IF EXIST %B%%bootfn%.exe (
 ) ELSE (
 	echo $null >> FAILED
 )
+pause

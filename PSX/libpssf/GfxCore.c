@@ -14,7 +14,7 @@ void initGfx() {
 	disp.isrgb24 = 0;
 	SetDefDrawEnv(&draw, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	sync();
+	VSync(0);
 	PutDispEnv(&disp);
 	PutDrawEnv(&draw);
 	clearScreen();
@@ -28,20 +28,12 @@ void initGfx() {
 
 void clearScreen() {
 	RECT	clearRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	sync();
+	VSync(0);
 	ClearImage(&clearRect, 0, 0, 0);
 }
 
 void clearColor(int r, int g, int b) {
 	RECT	clearRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	sync();
-	ClearImage(&clearRect, r, g, b);
-}
-
-void sync() {
 	VSync(0);
-}
-
-void syncN(int n) {
-	VSync(n);
+	ClearImage(&clearRect, r, g, b);
 }

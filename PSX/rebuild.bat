@@ -14,7 +14,7 @@ set DBG=.\debug\
 ccpsx -I%INC% -Xo$80010000 -O3 %S%%prog%.c %LIBSRC%SerCore.c %LIBSRC%GfxCore.c -o %B%%bootfn%.cpe
 cpe2x %B%%bootfn%.cpe
 
-IF EXIST %B%%bootfn%.exe (
+IF EXIST .\bin\PSSF.exe (
 	echo $null >> SUCCESS
 ) ELSE (
 	echo $null >> FAILED
