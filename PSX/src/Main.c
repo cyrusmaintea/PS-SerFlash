@@ -47,6 +47,7 @@ int main() {
 	Menu();
 
 	while (!done) {
+		update();
 		if (done)
 			break;
 	}
@@ -67,6 +68,8 @@ void update() {
 	if (pad & PADRdown) {
 		dbgMenu();
 	}
+	if (pad & PADRright)
+		Menu();
 
 }
 
