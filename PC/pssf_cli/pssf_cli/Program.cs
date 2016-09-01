@@ -12,8 +12,8 @@ namespace pssf_cli
         static void Main(string[] args)
         {
 
-
-
+            Console.WriteLine("Hello World");
+            string input = Console.ReadLine();
         }
 
     }

@@ -1,17 +1,18 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("pssf_cli")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("PlayStation Serial Flasher Utils")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DevolutionX Limited")]
 [assembly: AssemblyProduct("pssf_cli")]
 [assembly: AssemblyCopyright("Copyright DevolutionX Limited © 2016")]
-[assembly: AssemblyTrademark("DevolutionX")]
+[assembly: AssemblyTrademark("DevolutionXLtd")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -34,3 +35,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguageAttribute("en")]
